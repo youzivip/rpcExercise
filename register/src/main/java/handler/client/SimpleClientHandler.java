@@ -29,21 +29,23 @@ public class SimpleClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("我可以发送内容了～～～");
-   //     channel = ctx.channel();
-//        //向服务端发送内容
-//        Request request = new Request();
-//        request.setType(1);
-//        request.setUrl("service.HelloService");
-//        request.setMethod("sayHi");
-//        request.setParam("Jay");
-//        //  BufferedReader reader = new BufferedReader();
-////        ByteBuf buf = Unpooled.buffer(1024*1024);
-//        //发送数据
-//        ctx.channel().writeAndFlush(request);
+
+        //向服务端发送内容
+        Request request = new Request();
+        request.setType(1);
+        request.setUrl("service.HelloService");
+        request.setMethod("sayHi");
+        request.setParam("Jay111");
+        //  BufferedReader reader = new BufferedReader();
+//        ByteBuf buf = Unpooled.buffer(1024*1024);
+        //发送数据
+        ctx.channel().writeAndFlush(request);
     }
 
     public  void sendRequest(Request request){
-        channel.writeAndFlush(JSONObject.toJSONString(request).getBytes());
+        System.out.println(JSONObject.toJSONString(request));
+        System.out.println(JSONObject.toJSONString(channel.pipeline()));
+        channel.writeAndFlush(request);
     }
 
 

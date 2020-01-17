@@ -6,6 +6,7 @@ import handler.client.SimpleClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -33,19 +34,28 @@ public class Client {
                     protected void initChannel(SocketChannel sc) throws Exception {
                         sc.pipeline()
                                 .addLast(new DecodeHandler(Response.class))
-                        .addLast(new RpcEncoder(Request.class))
                                 .addLast(handler)
+                        .addLast(new RpcEncoder(Request.class))
+
                //         .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
                         //.addLast(new SimpleClientHandler())
                         ;
                     }
-                });
+                })
+                .option(ChannelOption.TCP_NODELAY, true)
+        ;
         try {
             //连接服务
             ChannelFuture future =  b.connect(host, port).sync();
             future.addListener(f->{
                 System.out.println("连接建立了"+f.get());
                 handlers.add(handler);
+//                Request request = new Request<>();
+//                request.setParam("121");
+//                request.setUrl("service.HelloService");
+//                request.setMethod("sayHi");
+//
+//                future.channel().writeAndFlush(request);
             });
             Thread.sleep(1000l);
         } catch (InterruptedException e) {
